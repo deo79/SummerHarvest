@@ -1,0 +1,107 @@
+include ../mixins/flash-messages
+
+doctype html
+html
+  head
+    title= title || 'Summer Harvest'
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    //
+       Bootstrap 
+    link(href='/bootstrap/css/bootstrap.min.css', rel='stylesheet', media='screen')
+    link(href='/styles/common.css', rel='stylesheet', media='screen')
+    link(href='http://fonts.googleapis.com/css?family=Fjalla+One', rel='stylesheet', type='text/css')
+    link(href='http://fonts.googleapis.com/css?family=Lato:300', rel='stylesheet', type='text/css')
+  body
+    script(src='http://code.jquery.com/jquery-latest.js')
+    script(src='/bootstrap/js/bootstrap.min.js')
+    script(src='/js/numeric-only.js')
+    script(src='/js/common.js')
+    | <div id="fb-root"></div>
+    | <script>(function(d, s, id) {
+    |   var js, fjs = d.getElementsByTagName(s)[0];
+    |   if (d.getElementById(id)) return;
+    |   js = d.createElement(s); js.id = id;
+    |   js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=184238825077402&version=v2.0";
+    |   fjs.parentNode.insertBefore(js, fjs);
+    | }(document, 'script', 'facebook-jssdk'));</script>
+    #wrap
+      //.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+      .navbar.navbar-inverse(role='navigation')
+        .container
+          .navbar-header
+            button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+              span.sr-only Toggle navigation
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            a.navbar-brand(href='/') Summer Harvest
+          .collapse.navbar-collapse
+            ul.nav.navbar-nav
+              each link in navLinks
+                - if(link.dropdown)
+                  li(class=( section==link.key ? 'active' : 'not-active') + ' dropdown')
+                    a.dropdown-toggle(href='#',data-toggle='dropdown')
+                      | #{link.label}
+                      span.caret
+                    ul.dropdown-menu(role='menu')
+                      each sublink in link.dropdown
+                        li
+                          a(href=sublink.href)= sublink.label
+                -else 
+                  li(class=( section==link.key ? 'active' : 'not-active'))
+                    a(href=link.href)= link.label
+          //
+            /.nav-collapse 
+      .body-filler
+      - if( isWinter )
+        .winter-banner
+          h4 Winter Edition!
+      .body-filler-top
+      +flash-messages(messages)
+      block content
+      .clear-both
+    .page-snippets-transition
+    .page-snippets
+      .container
+        .row-fluid
+          .col-md-6
+            each snippet in snippets
+              if snippet.type == 'home-page-left'
+                .page-snippet
+                  h3
+                    != snippet.name
+                  p
+                    != snippet.content
+          .col-md-6
+            each snippet in snippets
+              if snippet.type == 'home-page-right'
+                .page-snippet
+                  h3
+                    != snippet.name
+                  p
+                    != snippet.content
+    footer.footer
+      .container
+        .row-fluid
+          .col-md-3
+            | © Summer Harvest #{currentYear}
+            | <div class="fb-like" data-href="http://summerharvest.us/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
+          .col-md-4
+            //div= pages.length
+            h4 Summer Harvest
+            ul.list-links
+              each page in pages
+                li
+                  a(href='/page/#{page.key}') #{page.title}
+                //li
+                  a(href='javascript:void(0);') Donate
+              li
+                a(href='/register') Register a Garden or Tree
+          .col-md-4
+            h4 Links
+            ul.list-links
+              li
+                a(href='/signup') Sign up
+              li
+                a(href='http://www.foodforthesoul.org/') Food For The Soul
+          .col-md-1

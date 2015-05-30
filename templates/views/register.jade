@@ -1,0 +1,57 @@
+extends ../layouts/default
+
+block content
+	.container
+		.page-body
+			h1 Register your garden or tree!
+			h2 Grow your donation to Summer Harvest, and make a tangible difference in your community!
+			p 
+				| Use the form below to register your garden or tree (or farm).  When we need produce, we'll 
+				| be able to contact you to come and harvest your fruit and vegetables.
+			.row-fluid
+				.col-md-6
+					form(role="form",action="/register",method="post")
+						.form-group
+							label(for="name") Name
+							span.required 
+								|  *required
+							- if(name)
+								input.form-control(type="text",name="name",id="name",placeholder="Your Name",value='#{name.first} #{name.last}')
+							-else
+								input.form-control(type="text",name="name",id="name",placeholder="Your Name",value='')
+						.form-group
+							label(for="type") Type
+							span.required 
+								|  *required
+							select.form-control(name="type", id="type")
+								option(value="Tree") Tree
+								option(value="Garden") Garden
+								option(value="Farm") Farm
+						div(class="form-group form-email-section")
+							label(for="email") Email address
+							span.required 
+								|  *required
+							input.form-control(type="text",name="email",id="email",placeholder="you@example.com",value='',autocomplete="off")
+						div(class="form-group form-purpose-section")
+							label(for="purpose") Email address
+							span.required 
+								|  *required
+							input.form-control(type="text",name="purpose",id="purpose",value=( email ? '#{email}' : '' ))
+						.form-group
+							label(for="phone") Phone number
+							input.form-control(type="phone",name="phone",id="phone",placeholder="(000) 000-0000",value=(phone ? '#{phone}' : ''))
+						.form-group
+							label(for="comments") Comments
+							span.required 
+								|  *required
+							textarea.form-control(name="comments",id="comments",placeholder="Your comments...").
+								#{comments}
+						button(class=['btn','btn-primary'],type="submit") Submit
+			.clear-both
+			| <script> document.getElementById('purpose').placeholder = 'you@example.com'; </script>
+			| <script> if( '#{type}' )  { $('#type').val('#{type}'); } </script>
+
+
+
+
+		

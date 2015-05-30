@@ -1,0 +1,81 @@
+extends ../layouts/default
+
+block content
+    .container
+        .hero-unit
+          h1 Feeding the mind, body, and soul of our community
+          p
+            | We're an organization that helps families that are on the free and reduced lunch program. 
+            | We provide distributions of fresh and nutritious foods for families during the summer*.
+          p
+            span.floatright *And winter too!
+            a.btn.btn-primary.btn-large(href='/about') Learn more »
+    - if(nextDistributions.length > 0)
+      - var className = ( nextDistributions.length==1 ? 'col-md-12' : 'col-md-6' );
+      .middle-contrast
+          .container
+            .middle-contrast-callout
+              | #{nextDistributions.length} Location#{ nextDistributions.length != 1 ? 's' : '' }
+            .row-fluid
+              each dist in nextDistributions
+                div(class="#{className}")
+                  h2 #{dist.name}
+                  h3 #{moment(dist.distributionDate).format(dateFormatString.veryLong)}
+                  - if( dist.distributionLocation.mapUrl)
+                    - var url = dist.distributionLocation.mapUrl
+                    .map-box
+                      | <iframe src='!{url}' width='100%' height='450' frameborder='0' scrolling='no' style='border: 0;'></iframe>
+                  //- if( dist.distributionLocation.location.geo.length )
+                    - var url = 'https://maps.google.com/?q='+dist.distributionLocation.location.geo[1]+','+dist.distributionLocation.location.geo[0]
+                    .map-box
+                      //iframe(src='#{url}', width='100%', height='450', frameborder='0',scrolling='no', style='border: 0;')
+                    //
+                      - if (google_api_key)
+                        div.map-box('id'='meetup-map')
+                        script(src!='https://maps.googleapis.com/maps/api/js?key=' + google_api_key + '&sensor=false&libraries=places')
+                        script(src!='http://maps.google.com/maps/api/js?sensor=false')
+                        script.  
+                          function initialize() {
+                            var mapOptions = {
+                              center: new google.maps.LatLng(-34.397, 150.644),
+                              zoom: 8
+                            };
+                            var map = new google.maps.Map(document.getElementById("map-canvas"),
+                                mapOptions);
+                          }
+                          google.maps.event.addDomListener(window, 'load', initialize);
+                      div#map-canvas
+
+
+
+                  - var url = 'signup?distributionLocation=' + dist.distributionLocation.id
+                  a.btn.btn-primary.floatright(href="#{url}") Sign up!
+                  //#{dist}
+                  div
+                    .place-name #{dist.distributionLocation.name}
+                    .place-address-street #{dist.distributionLocation.location.street1}
+                    .place-address-csz #{dist.distributionLocation.location.suburb}, #{dist.distributionLocation.location.state} #{dist.distributionLocation.location.postcode}
+            //
+              .col-md-6
+                h2 Next Distribution: Cypress
+                h3 Saturday, June 15th @ 8AM
+                .map-box
+                  iframe(src='https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3314.911959679869!2d-118.04589245!3d33.814584999999994!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb447e734d48761fb!2sBoys\'+%26+Girls\'+Club+of+Cypress!5e0!3m2!1sen!2sus!4v1391984243193', width='100%', height='450', frameborder='0',scrolling='no', style='border: 0;')
+                a.btn.btn-primary.floatright(href="#") Sign up!
+                div
+                  .place-name Boys' &amp; Girls' Club of Cypress
+                  .place-address-street 10161 Moody St
+                  .place-addres-csz Cypress, CA 90630
+    - else
+      .middle-contrast
+        .container
+          .middle-contrast-callout
+            | No upcoming distributions
+          .row-fluid
+            .col-md-12
+              h2 There are currently no scheduled distributions
+              p 
+                | Make sure to <a href="/signup">sign up</a> for any next distribution and 
+                | <a href="https://www.facebook.com/summerharvestca">follow us on Facebook</a>
+                | to hear about what's happening next.
+          .clear-both

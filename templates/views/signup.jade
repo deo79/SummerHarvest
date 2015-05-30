@@ -1,0 +1,109 @@
+extends ../layouts/default
+
+block content
+	.container
+		.page-body
+			h1 Sign up!
+			p Sign up as a recipient to receive food, or sign up as a volunteer - either way, we'd love to have you!
+			.row-fluid
+				.col-md-6
+					form(role="form",action="signup-take",method="post")
+						- var thisYear = new Date().getFullYear()
+						input(type="hidden",name="year",value="#{thisYear}")
+						.form-group
+							label(for="name") Name
+							span.required 
+								|  *required
+							- if(name)
+								input.form-control(type="text",name="name",id="name",placeholder="Your Name",value='#{name.first} #{name.last}')
+							-else
+								input.form-control(type="text",name="name",id="name",placeholder="Your Name",value='')
+						.form-group
+							label.checkbox-inline
+								- if(signupType && signupType=='volunteer')
+									input(type="checkbox",name="signupType",value="volunteer",checked="checked",id="signupType") 
+								- else
+									input(type="checkbox",name="signupType",value="volunteer",id="signupType")
+								| I would like to sign up as a volunteer
+						fieldset
+							legend#sign-up-type-header Distribution
+							// div #{typeof locations}
+							// div #{locations.length}
+							.form-group
+								- if(locations)
+									label(for="loc") Location
+									span.required
+										//|  *required
+									select.form-control(name="loc",id="loc")
+										each loc in locations
+											//- var distSummary = dist.distributionLocation.name + ' on ' + moment(dist.distributionDate).format(dateFormatString.long)
+											//- var selected = ( typeof distributionLocation == 'string' && distributionLocation==dist.distributionLocation._id ? 'selected' : '' )
+											- var selected = '';
+											option(value="#{loc._id}") #{loc.name}
+										option(value="Any upcoming distribution") Any upcoming distribution
+												
+									//each dist in distributions
+										div= dist
+							.form-group
+								- if(schools)
+									label(for="school") Child's school
+									select.form-control(name="school",id="school")
+										each school in schools
+											option(value="#{school._id}") #{school.name}
+							div(class="form-group distribution")
+								label(for="numberOfChildren") Number of children
+								- if(numberOfChildren)
+									input(class="form-control numeric",type="text",name="numberOfChildren",id="numberOfChildren",placeholder="Number of children in your family",value='#{numberOfChildren}',style="max-width:300px;")
+								-else
+									input(class="form-control numeric",type="text",name="numberOfChildren",id="numberOfChildren",placeholder="Number of children in your family",value='',style="max-width:300px;")
+							div(class="form-group distribution")
+								label(for="numberOfAdults") Number of adults
+								- if(numberOfAdults)
+									input(class="form-control numeric",type="text",name="numberOfAdults",id="numberOfAdults",placeholder="Number of adults in your family",value='#{numberOfAdults}',style="max-width:300px;")
+								-else
+									input(class="form-control numeric",type="text",name="numberOfAdults",id="numberOfAdults",placeholder="Number of adults in your family",value='',style="max-width:300px;")
+							.children-group
+								label(for="phone") Phone number
+								- if(phone)
+									input(class="form-control numeric",type="text",name="phone",id="phone",placeholder="000 000 0000",value='#{phone}',style="max-width:300px;")
+								-else
+									input(class="form-control numeric",type="text",name="phone",id="phone",placeholder="000 000 0000",value='',style="max-width:300px;")
+							div.form-group.form-email-section
+								label(for="email") Email 
+								- if(email)
+									input(class="form-control",type="text",name="email",id="email",placeholder="you@example.com",value='#{email}',style="max-width:300px;")
+								-else
+									input(class="form-control",type="text",name="email",id="email",placeholder="you@example.com",value='',style="max-width:300px;")
+							div.form-group.form-purpose-section
+								label(for="purpose") Email address
+								- if(purpose)
+									input(class="form-control",type="text",name="purpose",id="purpose",placeholder="you@example.com",value='#{purpose}',style="max-width:300px;")
+								-else
+									input(class="form-control",type="text",name="purpose",id="purpose",placeholder="you@example.com",value='',style="max-width:300px;")
+							.form-group
+								- if(!location)
+									- var location = {};
+								label(for="location") Your address
+								- if(location.street1)
+									input(class="form-control",type="text",name="street1",id="street1",placeholder="1234 Main Street",value='#{location.street1}',style="max-width:300px;")
+								-else
+									input(class="form-control",type="text",name="street1",id="street1",placeholder="1234 Main Street",value='',style="max-width:300px;")
+								- if(location.street2)
+									input(class="form-control",type="text",name="street2",id="street2",placeholder="Apt 5",value='#{location.street2}',style="max-width:300px;")
+								-else
+									input(class="form-control",type="text",name="street2",id="street2",placeholder="Apt 5",value='',style="max-width:300px;")
+							.form-group
+								label(for="suburb") City / Zip
+								- if(location.suburb)
+									input(class="form-control",type="text",name="suburb",id="suburb",placeholder="Cypress",value='#{location.suburb}',style="max-width:300px;")
+								-else
+									input(class="form-control",type="text",name="suburb",id="suburb",placeholder="Cypress",value='',style="max-width:300px;")
+								- if(location.postcode)
+									input(class="form-control",type="text",name="postcode",id="postcode",placeholder="90630",value='#{location.postcode}',style="max-width:300px;")
+								-else
+									input(class="form-control",type="text",name="postcode",id="postcode",placeholder="90630",value='',style="max-width:300px;")
+						.form-group
+							input(type="submit",class="btn btn-primary",name="submitButton",value="Sign up")
+
+
+
